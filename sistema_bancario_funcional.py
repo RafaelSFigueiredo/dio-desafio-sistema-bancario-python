@@ -1,4 +1,5 @@
 lista_usuarios = {}
+lista_contas = {}
 
 saldo_conta = 0.00
 LIMITE = 500.00
@@ -7,11 +8,12 @@ contador_saques = 0
 extrato_conta = 11 * "=" + " EXTRATO " + 11 * "=" + "\n"
 
 menu = """
-Digite [c] para Cadastrar Usuário
-Digite [s] para Saque
-Digite [d] para Depósito
-Digite [e] para Extrato
-Digite [q] para Encerrar o atendimento
+[u]\tCadastrar Usuário
+[c]\tCriar Conta Corrente
+[s]\tSaque
+[d]\tDepósito
+[e]\tExtrato
+[q]\tEncerrar o atendimento
 
 """
 
@@ -76,7 +78,27 @@ def cadastrar_usuario(registro):
         registro.update({cpf: {"nome_usuario": nome, "nascimento_usuario": nascimento, "endereco_usuario": endereco}})
 
     else:
-        print("Operação recusada. Usuário já cadastrado.")
+        print("Operação recusada. CPF já cadastrado.")
+
+
+# FUNÇÃO CRIAR CONTA CORRENTE
+def criar_conta(registro_usuarios, registro_contas):
+
+    if len(registro_usuarios.keys()) == 0:
+        print("Operação recusada. Não há usuários cadastrados.")
+
+    else:
+        cpf_usuario = input("Informe o CPF do usuário: ")
+
+        if cpf_usuario not in registro_usuarios.keys():
+            print("Operação recusada. CPF não cadastrado no sistema.")
+
+        else:
+            nome_do_usuario = registro_usuarios[cpf_usuario]["nome_usuario"]
+
+            numero_de_contas = len(registro_contas.values())
+            numero_da_conta = str(numero_de_contas + 1)
+            registro_contas.update({numero_da_conta: {"agencia": "0001", "usuario": nome_do_usuario}})
 
 
 # LOOP DE FUNCIONAMENTO DO SISTEMA
@@ -84,8 +106,12 @@ while True:
     operacao = input(menu)
 
     # Cadastro de usuário
-    if operacao == "c":
+    if operacao == "u":
         cadastrar_usuario(lista_usuarios)
+
+    # Criar uma conta
+    elif operacao == "c":
+        criar_conta(lista_usuarios, lista_contas)
 
     # Saque
     elif operacao == "s":
